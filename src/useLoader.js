@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { Asset } from 'expo-asset'
 import {
   downloadAsync,
@@ -24,10 +23,6 @@ function buildGraph(object) {
     })
   }
   return data
-}
-
-export function useGraph(object) {
-  return React.useMemo(() => buildGraph(object), [object])
 }
 
 /**
