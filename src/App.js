@@ -4,7 +4,7 @@ import { Environment } from '@react-three/drei/core/Environment'
 import useLoader from './useLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-// const REMOTE_FILE_URL = 'https://raw.githack.com/CodyJasonBennett/r3f-native-starter/main/assets/cube.glb'
+// const REMOTE_FILE_URL = 'https://raw.githack.com/CodyJasonBennett/r3f-native-starter/main/assets/iphone.glb'
 
 const Model = (props) => {
   const { scene } = useLoader(GLTFLoader, require('../assets/iphone.glb'))

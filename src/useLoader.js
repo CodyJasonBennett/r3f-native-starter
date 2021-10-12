@@ -35,9 +35,6 @@ export function useGraph(object) {
  * Generates a URI from a filepath and caches it.
  */
 const getUri = async (url) => {
-  // If a local file is specified, don't cache it
-  if (!url.startsWith?.('http')) return (await Asset.fromModule(url).downloadAsync()).localUri
-
   // If remote file is already cached, return it
   const cached = await AsyncStorage.getItem(`@r3f-file-loader/${encodeURIComponent(url)}`)
   if (cached && (await getInfoAsync(cached)).exists) return cached
@@ -50,7 +47,11 @@ const getUri = async (url) => {
   if (!exists) await makeDirectoryAsync(localFilePath, { intermediates: true })
 
   // Download the file
-  const { uri } = await downloadAsync(url, localFilePath)
+  const uri = url.startsWith?.('http')
+    ? (await downloadAsync(url, localFilePath)).uri
+    : await (
+        await Asset.fromModule(url).downloadAsync()
+      ).localUri
 
   // Store generated URI in cache
   await AsyncStorage.setItem(`@r3f-file-loader/${encodeURIComponent(url)}`, uri)
