@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { useState, Suspense } from 'react'
 import * as THREE from 'three'
 import { Asset } from 'expo-asset'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -23,13 +23,21 @@ const Model = (props) => {
   return <primitive {...props} object={scene} />
 }
 
-const App = () => (
-  <Canvas>
-    <ambientLight />
-    <Suspense fallback={null}>
-      <Model scale={0.5} />
-    </Suspense>
-  </Canvas>
-)
+const App = () => {
+  const [color, setColor] = useState('white')
+
+  return (
+    <Canvas>
+      <ambientLight />
+      <Suspense fallback={null}>
+        <Model
+          scale={0.5}
+          children-0-material-color={color}
+          onClick={() => setColor((value) => (value === 'white' ? 'red' : 'white'))}
+        />
+      </Suspense>
+    </Canvas>
+  )
+}
 
 export default App
