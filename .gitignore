@@ -2,6 +2,7 @@
 node_modules
 .expo
 *.log
+.lock
 
 # Editor directories and files
 .idea

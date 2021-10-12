@@ -1,5 +1,5 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "src/index.js",
   "private": true,
   "scripts": {
     "start": "expo start",
