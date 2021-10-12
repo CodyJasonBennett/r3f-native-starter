@@ -1,11 +1,11 @@
 import React, { useState, Suspense } from 'react'
 import { useLoader, Canvas } from '@react-three/fiber'
-import { RemoteAssetLoader } from './loaders'
+import { AssetLoader } from './loaders'
 
 const REMOTE_FILE_URL = 'https://raw.githack.com/CodyJasonBennett/r3f-native-starter/main/assets/cube.glb'
 
 const Model = (props) => {
-  const { scene } = useLoader(RemoteAssetLoader, REMOTE_FILE_URL)
+  const { scene } = useLoader(AssetLoader, REMOTE_FILE_URL)
   return <primitive {...props} object={scene} />
 }
 
