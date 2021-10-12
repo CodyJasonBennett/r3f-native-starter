@@ -2,7 +2,7 @@
 node_modules
 .expo
 *.log
-.lock
+yarn.lock
 
 # Editor directories and files
 .idea
