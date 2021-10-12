@@ -3,11 +3,12 @@ import { Canvas } from '@react-three/fiber'
 import { Environment } from '@react-three/drei/core/Environment'
 import useLoader from './useLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import iphoneModelPath from '../assets/iphone.glb'
 
 // const REMOTE_FILE_URL = 'https://raw.githack.com/CodyJasonBennett/r3f-native-starter/main/assets/iphone.glb'
 
 const Model = (props) => {
-  const { scene } = useLoader(GLTFLoader, require('../assets/iphone.glb'))
+  const { scene } = useLoader(GLTFLoader, iphoneModelPath)
   return <primitive {...props} object={scene} />
 }
 

@@ -8,7 +8,6 @@ import {
   readAsStringAsync,
   EncodingType,
 } from 'expo-file-system'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { decode } from 'base64-arraybuffer'
 import { useAsset } from 'use-asset'
 
@@ -35,9 +34,8 @@ export function useGraph(object) {
  * Generates a URI from a filepath and caches it.
  */
 const getUri = async (url) => {
-  // If remote file is already cached, return it
-  const cached = await AsyncStorage.getItem(`@r3f-file-loader/${encodeURIComponent(url)}`)
-  if (cached && (await getInfoAsync(cached)).exists) return cached
+  // If asset is local, don't cache it
+  if (!url.startsWith?.('http')) return (await Asset.fromModule(url).downloadAsync()).localUri
 
   // Create cached file path
   const localFilePath = `${cacheDirectory}r3f/${encodeURIComponent(url)}`
@@ -47,14 +45,7 @@ const getUri = async (url) => {
   if (!exists) await makeDirectoryAsync(localFilePath, { intermediates: true })
 
   // Download the file
-  const uri = url.startsWith?.('http')
-    ? (await downloadAsync(url, localFilePath)).uri
-    : await (
-        await Asset.fromModule(url).downloadAsync()
-      ).localUri
-
-  // Store generated URI in cache
-  await AsyncStorage.setItem(`@r3f-file-loader/${encodeURIComponent(url)}`, uri)
+  const { uri } = await downloadAsync(url, localFilePath)
 
   return uri
 }
