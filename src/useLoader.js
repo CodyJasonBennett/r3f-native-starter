@@ -54,11 +54,8 @@ function loadingFn(extensions, onProgress) {
             if (loader.constructor.name === 'TextureLoader') {
               const asset = await getAsset(url).downloadAsync()
 
-              const texture = new THREE.Texture()
-
-              texture.isDataTexture = true
+              const texture = new THREE.DataTexture()
               texture.image = { data: asset, width: asset.width, height: asset.height }
-              texture.needsUpdate = true
 
               return res(texture)
             }
@@ -67,7 +64,6 @@ function loadingFn(extensions, onProgress) {
             if (loader.constructor.name === 'CubeTextureLoader') {
               const texture = new THREE.CubeTexture()
 
-              texture.isDataTexture = true
               texture.images = await Promise.all(
                 url.map(async (src) => {
                   const asset = await getAsset(src).downloadAsync()
@@ -84,7 +80,7 @@ function loadingFn(extensions, onProgress) {
             const arrayBuffer = await toBuffer(localUri)
 
             // Parse it
-            return loader.parse(
+            const parsed = loader.parse(
               arrayBuffer,
               undefined,
               (data) => {
@@ -93,6 +89,8 @@ function loadingFn(extensions, onProgress) {
               },
               (error) => reject(`Could not load ${url}: ${error.message}`),
             )
+
+            if (parsed) return res(parsed)
           }),
       ),
     )
