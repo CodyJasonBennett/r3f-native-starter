@@ -29,25 +29,15 @@ const getAsset = (input) => {
     case 'number':
       return Asset.fromModule(input)
     default:
-      throw 'Invalid asset! Must be a local or external reference.'
+      throw 'Invalid asset! Must be a URI or module.'
   }
 }
 
 /**
- * Generates a URI from a filepath and caches it.
+ * Converts a local URI to an ArrayBuffer.
  */
-const getUri = async (url) => {
-  const asset = getAsset(url)
-  const { localUri } = await asset.downloadAsync()
-
-  return localUri
-}
-
-/**
- * Converts a URI to an ArrayBuffer.
- */
-const toBuffer = async (uri) =>
-  readAsStringAsync(uri, {
+const toBuffer = async (localUri) =>
+  readAsStringAsync(localUri, {
     encoding: EncodingType.Base64,
   }).then(decode)
 
@@ -74,8 +64,8 @@ function loadingFn(extensions, onProgress) {
             }
 
             // Generate a buffer from cached input
-            const uri = await getUri(input)
-            const arrayBuffer = await toBuffer(uri)
+            const { localUri } = await getAsset(input).downloadAsync()
+            const arrayBuffer = await toBuffer(localUri)
 
             // Parse it
             return loader.parse(
