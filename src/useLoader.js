@@ -23,6 +23,8 @@ function buildGraph(object) {
  * Generates an asset based on input type.
  */
 const getAsset = (input) => {
+  if (input instanceof Asset) return input
+
   switch (typeof input) {
     case 'string':
       return Asset.fromURI(input)
@@ -34,7 +36,7 @@ const getAsset = (input) => {
 }
 
 /**
- * Converts a local URI to an ArrayBuffer.
+ * Downloads from a local URI and decodes into an ArrayBuffer.
  */
 const toBuffer = async (localUri) => readAsStringAsync(localUri, { encoding: 'base64' }).then(decode)
 
