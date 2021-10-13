@@ -14,9 +14,8 @@ const Environment = ({ background = false, preset }) => {
   const { gl, scene } = useThree()
   const data = useLoader(RGBELoader, `${CUBEMAP_ROOT}/hdri/${presetsObj[preset]}`)
   const texture = useMemo(() => {
-    const map = new THREE.DataTexture(data.data, data.width, data.height)
     const gen = new THREE.PMREMGenerator(gl)
-    const texture = gen.fromEquirectangular(map).texture
+    const texture = gen.fromEquirectangular(data).texture
     gen.dispose()
 
     return texture
@@ -56,7 +55,7 @@ const App = () => (
     <directionalLight intensity={1.1} position={[0.5, 0, 0.866]} />
     <directionalLight intensity={0.8} position={[-6, 2, 2]} />
     <Suspense fallback={null}>
-      <Environment background preset="park" />
+      <Environment preset="park" />
       <Model url={iphoneModelPath} screenUrl={screenTexturePath} />
     </Suspense>
   </Canvas>

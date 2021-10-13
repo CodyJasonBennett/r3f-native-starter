@@ -50,7 +50,7 @@ function loadingFn(extensions, onProgress) {
       input.map(
         (url) =>
           new Promise(async (res, reject) => {
-            // There's no Image in native, so we create & pass a data texture instead.
+            // There's no Image in native, so we create & pass a data texture instead
             if (loader.constructor.name === 'TextureLoader') {
               const asset = await getAsset(url).downloadAsync()
 
@@ -75,7 +75,20 @@ function loadingFn(extensions, onProgress) {
               return res(texture)
             }
 
-            // Generate a buffer from cached url
+            // If asset is external and not an Image, load it
+            if (url.startsWith?.('http') && Proto.prototype.hasOwnProperty('load')) {
+              return loader.load(
+                input,
+                (data) => {
+                  if (data.scene) Object.assign(data, buildGraph(data.scene))
+                  res(data)
+                },
+                onProgress,
+                (error) => reject(`Could not load ${input}: ${error.message}`),
+              )
+            }
+
+            // Otherwise, create a localUri and a file buffer
             const { localUri } = await getAsset(url).downloadAsync()
             const arrayBuffer = await toBuffer(localUri)
 
@@ -90,6 +103,7 @@ function loadingFn(extensions, onProgress) {
               (error) => reject(`Could not load ${url}: ${error.message}`),
             )
 
+            // Respect synchronous parsers which don't have callbacks
             if (parsed) return res(parsed)
           }),
       ),
