@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Asset } from 'expo-asset'
-import { readAsStringAsync, EncodingType } from 'expo-file-system'
+import { readAsStringAsync } from 'expo-file-system'
 import { decode } from 'base64-arraybuffer'
 import { useAsset } from 'use-asset'
 
@@ -36,10 +36,7 @@ const getAsset = (input) => {
 /**
  * Converts a local URI to an ArrayBuffer.
  */
-const toBuffer = async (localUri) =>
-  readAsStringAsync(localUri, {
-    encoding: EncodingType.Base64,
-  }).then(decode)
+const toBuffer = async (localUri) => readAsStringAsync(localUri, { encoding: 'base64' }).then(decode)
 
 function loadingFn(extensions, onProgress) {
   return function (Proto, ...input) {
