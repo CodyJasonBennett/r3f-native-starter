@@ -48,11 +48,11 @@ function loadingFn(extensions, onProgress) {
     // Go through the urls and load them
     return Promise.all(
       input.map(
-        (input) =>
+        (url) =>
           new Promise(async (res, reject) => {
             // There's no Image in native, so we create & pass a data texture instead.
             if (loader.constructor.name === 'TextureLoader') {
-              const asset = await getAsset(input).downloadAsync()
+              const asset = await getAsset(url).downloadAsync()
 
               const texture = new THREE.Texture()
               texture.isDataTexture = true
@@ -62,8 +62,25 @@ function loadingFn(extensions, onProgress) {
               return res(texture)
             }
 
-            // Generate a buffer from cached input
-            const { localUri } = await getAsset(input).downloadAsync()
+            // Do similar for CubeTextures
+            if (loader.constructor.name === 'CubeTextureLoader') {
+              const texture = new THREE.CubeTexture()
+              texture.isDataTexture = true
+
+              await Promise.all(
+                url.map(async (src, index) => {
+                  const asset = await getAsset(src).downloadAsync()
+                  texture.images[index] = { data: asset, width: asset.width, height: asset.height }
+                }),
+              )
+
+              texture.needsUpdate = true
+
+              return res(texture)
+            }
+
+            // Generate a buffer from cached url
+            const { localUri } = await getAsset(url).downloadAsync()
             const arrayBuffer = await toBuffer(localUri)
 
             // Parse it
@@ -74,7 +91,7 @@ function loadingFn(extensions, onProgress) {
                 if (data.scene) Object.assign(data, buildGraph(data.scene))
                 res(data)
               },
-              (error) => reject(`Could not load ${input}: ${error.message}`),
+              (error) => reject(`Could not load ${url}: ${error.message}`),
             )
           }),
       ),
