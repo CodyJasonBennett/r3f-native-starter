@@ -55,6 +55,7 @@ function loadingFn(extensions, onProgress) {
               const asset = await getAsset(url).downloadAsync()
 
               const texture = new THREE.Texture()
+
               texture.isDataTexture = true
               texture.image = { data: asset, width: asset.width, height: asset.height }
               texture.needsUpdate = true
@@ -65,15 +66,14 @@ function loadingFn(extensions, onProgress) {
             // Do similar for CubeTextures
             if (loader.constructor.name === 'CubeTextureLoader') {
               const texture = new THREE.CubeTexture()
-              texture.isDataTexture = true
 
-              await Promise.all(
-                url.map(async (src, index) => {
+              texture.isDataTexture = true
+              texture.images = await Promise.all(
+                url.map(async (src) => {
                   const asset = await getAsset(src).downloadAsync()
-                  texture.images[index] = { data: asset, width: asset.width, height: asset.height }
+                  return { data: asset, width: asset.width, height: asset.height }
                 }),
               )
-
               texture.needsUpdate = true
 
               return res(texture)
