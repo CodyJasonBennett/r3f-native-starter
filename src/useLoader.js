@@ -1,12 +1,6 @@
+import * as THREE from 'three'
 import { Asset } from 'expo-asset'
-import {
-  downloadAsync,
-  getInfoAsync,
-  cacheDirectory,
-  makeDirectoryAsync,
-  readAsStringAsync,
-  EncodingType,
-} from 'expo-file-system'
+import { readAsStringAsync, EncodingType } from 'expo-file-system'
 import { decode } from 'base64-arraybuffer'
 import { useAsset } from 'use-asset'
 
@@ -26,23 +20,27 @@ function buildGraph(object) {
 }
 
 /**
+ * Generates an asset based on input type.
+ */
+const getAsset = (input) => {
+  switch (typeof input) {
+    case 'string':
+      return Asset.fromURI(input)
+    case 'number':
+      return Asset.fromModule(input)
+    default:
+      throw 'Invalid asset! Must be a local or external reference.'
+  }
+}
+
+/**
  * Generates a URI from a filepath and caches it.
  */
 const getUri = async (url) => {
-  // If asset is local, don't cache it
-  if (!url.startsWith?.('http')) return (await Asset.fromModule(url).downloadAsync()).localUri
+  const asset = getAsset(url)
+  const { localUri } = await asset.downloadAsync()
 
-  // Create cached file path
-  const localFilePath = `${cacheDirectory}r3f/${encodeURIComponent(url)}`
-
-  // Create cache directory
-  const { exists } = await getInfoAsync(localFilePath)
-  if (!exists) await makeDirectoryAsync(localFilePath, { intermediates: true })
-
-  // Download the file
-  const { uri } = await downloadAsync(url, localFilePath)
-
-  return uri
+  return localUri
 }
 
 /**
@@ -63,10 +61,24 @@ function loadingFn(extensions, onProgress) {
       input.map(
         (input) =>
           new Promise(async (res, reject) => {
+            // There's no Image in native, so we create & pass a data texture instead.
+            if (loader.constructor.name === 'TextureLoader') {
+              const asset = await getAsset(input).downloadAsync()
+
+              const texture = new THREE.Texture()
+              texture.isDataTexture = true
+              texture.image = { data: asset, width: asset.width, height: asset.height }
+              texture.needsUpdate = true
+
+              return res(texture)
+            }
+
+            // Generate a buffer from cached input
             const uri = await getUri(input)
             const arrayBuffer = await toBuffer(uri)
 
-            loader.parse(
+            // Parse it
+            return loader.parse(
               arrayBuffer,
               undefined,
               (data) => {
