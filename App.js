@@ -1,11 +1,10 @@
 import React, { Suspense, useEffect } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useThree, Canvas } from '@react-three/fiber'
+import { useThree, useLoader, Canvas } from '@react-three/fiber'
 import { Environment } from '@react-three/drei/core/Environment'
-import useLoader from './useLoader'
-import iphoneModelPath from '../assets/iphone.glb'
-import screenTexturePath from '../assets/screen-texture.jpg'
+import iphoneModelPath from './assets/iphone.glb'
+import screenTexturePath from './assets/screen-texture.jpg'
 
 const Model = ({ url, screenUrl, ...rest }) => {
   const { gl } = useThree()
