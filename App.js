@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useLoader, Canvas } from '@react-three/fiber'
 import { Environment } from '@react-three/drei/core/Environment'
