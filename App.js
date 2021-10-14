@@ -1,11 +1,11 @@
-import { Suspense } from 'react'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useLoader, Canvas } from '@react-three/fiber'
+import React, { Suspense } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { useGLTF } from '@react-three/drei/core/useGLTF'
 import { Environment } from '@react-three/drei/core/Environment'
 import iphoneModelPath from './assets/iphone.glb'
 
 const Model = ({ url, ...rest }) => {
-  const { scene } = useLoader(GLTFLoader, url)
+  const { scene } = useGLTF(url)
   return <primitive {...rest} object={scene} />
 }
 
