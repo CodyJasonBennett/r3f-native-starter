@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@react-three/drei": "^7.14.1",
-    "@react-three/fiber": "./react-three-fiber-v8.0.0-alpha-10.tgz",
+    "@react-three/fiber": "./react-three-fiber-v8.0.0-alpha-12.tgz",
     "react": "^18.0.0-alpha-1314299c7-20210901",
     "react-native": "expo/react-native#sdk-42.0.0",
     "three": "^0.133.1"
