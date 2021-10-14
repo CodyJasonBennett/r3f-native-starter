@@ -1,27 +1,11 @@
-import React, { Suspense, useEffect } from 'react'
-import * as THREE from 'three'
+import React, { Suspense } from 'react'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useThree, useLoader, Canvas } from '@react-three/fiber'
+import { useLoader, Canvas } from '@react-three/fiber'
 import { Environment } from '@react-three/drei/core/Environment'
 import iphoneModelPath from './assets/iphone.glb'
-import screenTexturePath from './assets/screen-texture.jpg'
 
-const Model = ({ url, screenUrl, ...rest }) => {
-  const { gl } = useThree()
+const Model = ({ url, ...rest }) => {
   const { scene } = useLoader(GLTFLoader, url)
-  const texture = useLoader(THREE.TextureLoader, screenUrl)
-
-  useEffect(() => {
-    scene.traverse((node) => {
-      if (node.name === 'Screen') {
-        texture.encoding = THREE.sRGBEncoding
-        texture.flipY = false
-        texture.anisotropy = gl.capabilities.getMaxAnisotropy()
-        node.material = new THREE.MeshBasicMaterial({ map: texture })
-      }
-    })
-  }, [texture])
-
   return <primitive {...rest} object={scene} />
 }
 
@@ -33,7 +17,7 @@ const App = () => (
     <directionalLight intensity={0.8} position={[-6, 2, 2]} />
     <Suspense fallback={null}>
       <Environment preset="park" />
-      <Model url={iphoneModelPath} screenUrl={screenTexturePath} />
+      <Model url={iphoneModelPath} />
     </Suspense>
   </Canvas>
 )
