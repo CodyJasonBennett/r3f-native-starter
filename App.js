@@ -1,10 +1,11 @@
 import React, { Suspense } from 'react'
-import { Canvas } from '@react-three/fiber/native'
+import { useFrame, Canvas } from '@react-three/fiber/native'
 import { useGLTF, Environment } from '@react-three/drei/native'
 import iphoneModelPath from './assets/iphone.glb'
 
 const Model = ({ url, ...rest }) => {
   const { scene } = useGLTF(url)
+  useFrame(() => (scene.rotation.y += 0.01))
   return <primitive {...rest} object={scene} />
 }
 
