@@ -10,14 +10,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
-    "expo": "^43.0.1",
     "expo-cli": "^4.12.10"
   },
   "dependencies": {
-    "@react-three/drei": "^7.14.3",
-    "@react-three/fiber": "^8.0.0-beta-02",
-    "react": "^18.0.0-beta-96ca8d915-20211115",
+    "@react-three/drei": "^8.0.0",
+    "@react-three/fiber": "^8.0.0-beta-04",
+    "react": "^18.0.0-rc.0",
     "react-native": "0.64.3",
-    "three": "^0.133.1"
+    "three": "0.133.1"
   }
 }
