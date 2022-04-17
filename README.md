@@ -1,6 +1,6 @@
 # [v8] R3F React Native Starter
 
-A basic starter for R3F v8's react-native support.
+A basic starter for R3F v8's react-native support. See [official R3F react-native instructions](https://docs.pmnd.rs/react-three-fiber/getting-started/installation#react-native).
 
 ## Install & run
 
